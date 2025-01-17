@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - api-bashhistory:/commandhistory
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_db
+
+  postgres_db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - postgres_db:/data/postgres
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_db:
+    driver: local
+  api-bashhistory:
+    driver: local
